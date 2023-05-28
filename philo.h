@@ -16,21 +16,17 @@ typedef struct s_data
     int time_to_sleep;
     int number_of_times_each_philosopher_must_eat;
     bool someone_died;
-    pthread_mutex_t *forks;
-    pthread_mutex_t print_mutex;
-    pthread_mutex_t someone_died_mutex;
-    struct timeval start_time;
-} t_data;
-
-typedef struct s_philo
-{
     int id;
     int number_of_times_ate;
     pthread_t thread;
     pthread_mutex_t *left_fork;
     pthread_mutex_t *right_fork;
-    t_data *simulation;
-} t_philo;
+    pthread_mutex_t print_mutex;
+    pthread_mutex_t someone_died_mutex;
+    struct timeval start_time;
+} t_data;
+
+
 int init_simulation(t_data *simulation, int argc, char **argv);
 
 // Utils
