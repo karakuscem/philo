@@ -21,12 +21,33 @@ int init_simulation(t_data *simulation, int argc, char **argv)
     return (0);
 }
 
+int init_philos(t_philo *philos, t_data *simulation)
+{
+    int i;
+    int j;
+
+    philos = malloc(sizeof(t_philo) * simulation->number_of_philosophers);
+    i = 0;
+    j = 0;
+    while (i < simulation->number_of_philosophers)
+    {
+        philos[i].id = i + 1;
+        philos[i].number_of_times_ate = 0;
+        philos[i].left_fork = &simulation->forks[i];
+        philos[i].right_fork = &simulation->forks[(i + 1) % simulation->number_of_philosophers];
+        philos[i].simulation = simulation;
+        if (pthread_create(&philos[i].thread, NULL, &routine, &philos[i]))
+            return (1);
+    }
+    while (j < simulation->number_of_philosophers)
+        pthread_join(philos[i].thread, NULL);
+    return (0);
+}
+
 void    *routine(void *arg)
 {
-    t_data *simulation;
+    (t_data *)arg;
 
-    simulation = (t_data *)arg;
-    printf("Hello from thread\n");
     return (NULL);
 }
 
@@ -39,14 +60,20 @@ int start_simulation(t_data *simulation)
     {
         if (pthread_create(th+i, NULL, &routine, NULL) != 0)
             return (1);
+        printf("Thred %d has started\n", i);
+    }
+    for (i = 0; i < 4; i++)
+    {
         if (pthread_join(th[i], NULL) != 0)
             return (2);
+        printf("Thread %d has finished\n", i);
     }
 }
 
 int main(int argc, char **argv)
 {
-    t_data *simulation;
+    t_data  *simulation;
+    t_philo *philos;
 
     if (argc < 5 || argc > 6)
         return (1);
