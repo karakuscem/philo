@@ -7,6 +7,8 @@
 // Create a start simulation function
 // Create a free simulation function
 
+
+// Init simulation
 int init_simulation(t_data *simulation, int argc, char **argv)
 {
     simulation->number_of_philosophers = atoi(argv[1]);
@@ -21,6 +23,7 @@ int init_simulation(t_data *simulation, int argc, char **argv)
     return (0);
 }
 
+// Create thread and finish with join
 int init_philos(t_philo *philos, t_data *simulation)
 {
     int i;
@@ -44,13 +47,29 @@ int init_philos(t_philo *philos, t_data *simulation)
     return (0);
 }
 
+// Print status
+void    print_status(t_philo *philo, char *status)
+{
+
+}
+
+// routine
 void    *routine(void *arg)
 {
-    (t_data *)arg;
+    t_philo *philo;
 
+    philo = (t_philo *)arg;
+    while (1)
+    {
+        pthread_mutex_lock(philo->left_fork);
+        print_status(philo, "has taken a fork");
+        pthread_mutex_lock(philo->right_fork);
+        print_status(philo, "has taken a fork");
+    }
     return (NULL);
 }
 
+// Gonna rewrite it
 int start_simulation(t_data *simulation)
 {
     pthread_t   th[4];
