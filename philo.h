@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <sys/time.h>
 #include <unistd.h>
 
@@ -18,5 +19,8 @@ typedef struct s_data
 } t_data;
 
 int init_simulation(t_data *simulation, int argc, char **argv);
+
+// Utils
+int ft_atoi(const char *str);
 
 #endif

@@ -21,6 +21,27 @@ int init_simulation(t_data *simulation, int argc, char **argv)
     return (0);
 }
 
+void    *routine(void *arg)
+{
+    t_data *simulation;
+
+    simulation = (t_data *)arg;
+    printf("Hello from thread\n");
+    return (NULL);
+}
+
+int start_simulation(t_data *simulation)
+{
+    pthread_t   th[4];
+    int i;
+
+    for (i = 0; i < 4; i++)
+    {
+        if (pthread_create(th+i, NULL, &routine, NULL) != 0)
+            return (1);
+    }
+}
+
 int main(int argc, char **argv)
 {
     t_data *simulation;
@@ -34,6 +55,5 @@ int main(int argc, char **argv)
         return (1);
     if (start_simulation(simulation))
         return (1);
-    free_simulation(simulation);
     return (0);
 }
