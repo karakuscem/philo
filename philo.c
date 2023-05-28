@@ -39,6 +39,8 @@ int start_simulation(t_data *simulation)
     {
         if (pthread_create(th+i, NULL, &routine, NULL) != 0)
             return (1);
+        if (pthread_join(th[i], NULL) != 0)
+            return (2);
     }
 }
 
