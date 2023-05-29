@@ -28,6 +28,8 @@ typedef struct s_data
 
 
 int init_simulation(t_data *simulation, int argc, char **argv);
+int init_mutexes(t_data *simulation, pthread_mutex_t *forks);
+int start_simulation(t_data *simulation);
 
 // Utils
 int ft_atoi(const char *str);

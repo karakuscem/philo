@@ -20,7 +20,6 @@ int init_simulation(t_data *simulation, int argc, char **argv)
         simulation[i].number_of_times_ate = 0;
         i++;
     }
-    gettimeofday(&simulation->start_time, NULL);
     return (0);
 }
 
