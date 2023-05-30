@@ -23,7 +23,7 @@ typedef struct s_data
     pthread_mutex_t *right_fork;
     pthread_mutex_t print_mutex;
     pthread_mutex_t someone_died_mutex;
-    struct timeval start_time;
+    unsigned long   start_time;
 } t_data;
 
 
@@ -33,5 +33,7 @@ int start_simulation(t_data *simulation);
 
 // Utils
 int ft_atoi(const char *str);
+unsigned long	get_ms(void);
+unsigned long   get_real_time(t_data *simulation);
 
 #endif

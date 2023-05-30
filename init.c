@@ -10,6 +10,7 @@ int init_simulation(t_data *simulation, int argc, char **argv)
     simulation->time_to_eat = ft_atoi(argv[3]);
     simulation->time_to_sleep = ft_atoi(argv[4]);
     simulation->someone_died = false;
+    simulation->start_time = get_ms();
     if (argc == 6)
         simulation->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
     else
