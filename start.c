@@ -1,48 +1,63 @@
 #include "philo.h"
 
-void    print_status(t_data *simulation, char *status)
+void    print_status(t_philo *philo, char *status)
 {
-    unsigned long   time;
+    struct timeval current_time;
+    int time_in_ms;
 
-    time = get_real_time(simulation);
-    printf("%llums %d %s\n", time, simulation->id, status);
+    pthread_mutex_lock(&philo->simulation->print_mutex);
+    gettimeofday(&current_time, NULL);
+    time_in_ms = (current_time.tv_sec - philo->simulation->start_time.tv_sec) * 1000 +
+                 (current_time.tv_usec - philo->simulation->start_time.tv_usec) / 1000;
+    printf("%llums %d %s\n", time_in_ms, philo->id, status);
+    pthread_mutex_unlock(&philo->simulation->print_mutex);
 }
 
-void    routine(void *arg)
+void    *routine(void *arg)
 {
-    t_data  *simulation;
+    t_philo  *philo;
 
-    simulation = (t_data *)arg;
-    pthread_mutex_lock(simulation->left_fork);
-    print_status(simulation, " has taken a fork.\n");
-    pthread_mutex_lock(simulation->right_fork);
-    print_status(simulation, " has taken a fork.\n");
-    print_status(simulation, " is eating");
-    pthread_mutex_unlock(simulation->left_fork);
-    pthread_mutex_unlock(simulation->right_fork);
-    print_status(simulation, " is sleeping");
-    usleep(simulation->time_to_sleep * 1000);
-    print_status(simulation, " is thinking");
-    usleep(simulation->time_to_eat * 1000);
-    simulation->number_of_times_ate++;
+    philo = (t_philo *)arg;
+    while (true)
+    {
+        pthread_mutex_lock(philo->left_fork);
+        print_status(philo, "has taken a fork");
+        pthread_mutex_lock(philo->right_fork);
+        print_status(philo, "has taken a fork");
+        print_status(philo, "is eating");
+        philo->number_of_times_ate++;
+        usleep(philo->simulation->time_to_eat * 1000);
+        pthread_mutex_unlock(philo->right_fork);
+        pthread_mutex_unlock(philo->left_fork);
+        print_status(philo, "is sleeping");
+        usleep(philo->simulation->time_to_sleep * 1000);
+        print_status(philo, "is thinking");
+    }
+    return (NULL);
 }
 
 int start_simulation(t_data *simulation)
 {
-    int i;
+    t_philo *philosophers;
+    int     i;
 
-    i = 0;
-    while (i < simulation->number_of_philosophers)
+    i = -1;
+    philosophers = malloc(sizeof(t_philo) * simulation->number_of_philosophers);
+    if (!philosophers)
+        return (1);
+    while (++i < simulation->number_of_philosophers)
     {
-        if (pthread_create(&simulation[i].thread, NULL, &routine, &simulation[i]));
+        philosophers[i].id = i + 1;
+        philosophers[i].number_of_times_ate = 0;
+        philosophers[i].left_fork = &simulation->forks[i];
+        philosophers[i].right_fork = &simulation->forks[(i + 1) % simulation->number_of_philosophers];
+        philosophers[i].simulation = simulation;
+        if (pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers[i]))
             return (1);
-        i++;
     }
-    i = 0;
-    while (i < simulation->number_of_philosophers)
-    {
-        if (pthread_join(&simulation[i].thread, NULL))
-            return (1);
-        i++;
-    }
+    i = -1;
+    while (++i < simulation->number_of_philosophers)
+        pthread_join(philosophers[i].thread, NULL);
+    free(philosophers);
+    return (0);
 }

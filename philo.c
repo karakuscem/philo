@@ -15,8 +15,6 @@ int main(int argc, char **argv)
         return (1);
     if (init_simulation(simulation, argc, argv))
         return (1);
-    if (init_mutexes(simulation, forks))
-        return (1);
     if (start_simulation(simulation))
         return (1);
     return (0);
