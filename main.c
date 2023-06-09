@@ -64,7 +64,10 @@ void    ft_print_status(t_philo *philo, char *status)
 
     pthread_mutex_lock(&philo->simulation->print_mutex);
     time_in_ms = ft_real_time(philo);
-    printf("%llums %d %s\n", time_in_ms, philo->id, status);
+    if (!ft_check_death(philo) || !ft_check_meals(philo))
+        printf("%llu %d %s\n", time_in_ms, philo->id, status);
+    else
+        return ;
     pthread_mutex_unlock(&philo->simulation->print_mutex);
 }
 
@@ -81,15 +84,23 @@ int ft_check_meals(t_philo *philos)
 int ft_check_death(t_philo *philos)
 {
     unsigned long long time_in_ms;
+    int i;
 
     time_in_ms = ft_real_time(philos);
-    if (time_in_ms - philos->last_time_ate > philos->simulation->time_to_die)
+    i = -1;
+    while (++i < philos->simulation->number_of_philosophers)
     {
-        ft_print_status(philos, "died");
-        pthread_mutex_lock(&philos->simulation->someone_died_mutex);
-        philos->simulation->someone_died = 1;
-        pthread_mutex_unlock(&philos->simulation->someone_died_mutex);
-        return (1);
+        if (time_in_ms - philos[i].last_time_ate > philos->simulation->time_to_die)
+        {
+            pthread_mutex_lock(&philos->simulation->someone_died_mutex);
+            if (!philos->simulation->someone_died)
+            {
+                philos->simulation->someone_died = 1;
+                printf("%llu %d died\n", time_in_ms, philos[i].id);
+            }
+            pthread_mutex_unlock(&philos->simulation->someone_died_mutex);
+            return (1);
+        }
     }
     return (0);
 }
@@ -101,15 +112,11 @@ void    *routine(void *arg)
     philo = (t_philo *)arg;
     while (1)
     {
-        if (ft_check_meals(philo) || ft_check_death(philo))
-            break;
         pthread_mutex_lock(philo->right_fork);
         ft_print_status(philo, "has taken a fork");
         pthread_mutex_lock(philo->left_fork);
         ft_print_status(philo, "has taken a fork");
-        pthread_mutex_lock(&philo->simulation->someone_died_mutex);
         philo->last_time_ate = ft_real_time(philo);
-        pthread_mutex_unlock(&philo->simulation->someone_died_mutex);
         ft_print_status(philo, "is eating");
         usleep(philo->simulation->time_to_eat * 1000);
         pthread_mutex_unlock(philo->left_fork);
@@ -132,7 +139,6 @@ int ft_start_sim(t_philo *philos, int num_of_philos)
     {
         if (pthread_create(&philos[i].thread, NULL, &routine, &philos[i]))
             return (1);
-        usleep(100);
     }
     i = -1;
     while (++i < num_of_philos)

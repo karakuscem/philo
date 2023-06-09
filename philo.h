@@ -36,5 +36,7 @@ typedef struct s_philo
 
 // Utils
 int ft_atoi(const char *str);
+int ft_check_meals(t_philo *philos);
+int ft_check_death(t_philo *philos);
 
 #endif
