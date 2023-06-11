@@ -30,13 +30,24 @@ typedef struct s_philo
     pthread_mutex_t *left_fork;
     pthread_mutex_t *right_fork;
     pthread_mutex_t times_ate_mutex;
+    pthread_mutex_t last_time_ate_mutex;
     t_data *simulation;
 } t_philo;
 
 
+// Init
+int ft_init_sim(t_data *simulation, int argc, char **argv);
+int ft_init_mutex(t_data *simulation);
+int ft_init_philo(t_philo *philos, t_data *simulation);
+
+// Start
+int ft_start_sim(t_philo *philos, int num_of_philos);
+
 // Utils
 int ft_atoi(const char *str);
 int ft_check_meals(t_philo *philos);
-int ft_check_death(t_philo *philos);
+int ft_check_death(t_philo *philo, int *someone_died);
+unsigned long long ft_real_time(t_philo *philo);
+int ft_print_status(t_philo *philo, char *status);
 
 #endif
