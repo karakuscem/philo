@@ -14,9 +14,11 @@ typedef struct s_data
     int time_to_eat;
     int time_to_sleep;
     int number_of_times_each_philosopher_must_eat;
+    int total_meals;
     int someone_died;
     pthread_mutex_t *forks;
     pthread_mutex_t print_mutex;
+    pthread_mutex_t times_ate_mutex;
     pthread_mutex_t someone_died_mutex;
     struct timeval start_time;
 } t_data;
@@ -24,12 +26,10 @@ typedef struct s_data
 typedef struct s_philo
 {
     int id;
-    int number_of_times_ate;
     pthread_t thread;
     unsigned long long last_time_ate;
     pthread_mutex_t *left_fork;
     pthread_mutex_t *right_fork;
-    pthread_mutex_t times_ate_mutex;
     pthread_mutex_t last_time_ate_mutex;
     t_data *simulation;
 } t_philo;
@@ -49,5 +49,9 @@ int ft_check_meals(t_philo *philos);
 int ft_check_death(t_philo *philo, int *someone_died);
 unsigned long long ft_real_time(t_philo *philo);
 int ft_print_status(t_philo *philo, char *status);
+int acquire_forks_odd(t_philo *philo);
+int acquire_forks_even(t_philo *philo);
+int ft_usleep(unsigned long long time_in_ms);
+unsigned long long ft_get_time(void);
 
 #endif
