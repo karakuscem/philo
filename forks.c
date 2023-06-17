@@ -11,8 +11,9 @@ int acquire_forks_odd(t_philo *philo)
     if (philo->simulation->number_of_philosophers == 1)
     {
         pthread_mutex_unlock(philo->left_fork);
-        usleep(philo->simulation->time_to_die * 1000);
+        ft_usleep(philo->simulation->time_to_die);
         ft_print_status(philo, "died");
+        philo->simulation->someone_died = 1;
         return (1);
     }
 	pthread_mutex_lock(philo->right_fork);
@@ -39,7 +40,7 @@ int acquire_forks_even(t_philo *philo)
     {
         pthread_mutex_unlock(philo->right_fork);
         usleep(philo->simulation->time_to_die * 1000);
-        ft_print_status(philo, "died");
+        ft_check_death(philo, &philo->simulation->someone_died);
         return (1);
     }
     pthread_mutex_lock(philo->left_fork);

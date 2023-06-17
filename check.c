@@ -23,20 +23,19 @@ int ft_check_meals(t_philo *philo)
 int ft_check_death(t_philo *philo, int *someone_died)
 {
     unsigned long long time_in_ms;
+    int                eaten;
+    int                time_to_die;
 
+    eaten = philo->last_time_ate;
+    time_to_die = philo->simulation->time_to_die;
     time_in_ms = ft_real_time(philo);
-    if (philo->simulation->someone_died == 1)
+    if (ft_check_meals(philo))
         return (1);
-    else if (ft_check_meals(philo))
-        return (1);
-    else if ((int)(time_in_ms - philo->last_time_ate) > philo->simulation->time_to_die)
+    else if (((int)(time_in_ms - eaten) > time_to_die && someone_died == 0))
     {
-        if (philo->simulation->someone_died == 0)
-        {
-            ft_print_status(philo, "died");
-            *someone_died = 1;
-            return (1);
-        }
+        ft_print_status(philo, "died");
+        *someone_died = 1;
+        return (1);
     }
     return (0);
 }
