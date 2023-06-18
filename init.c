@@ -43,6 +43,7 @@ int ft_init_philo(t_philo *philos, t_data *simulation)
         philos[i].left_fork = &simulation->forks[i];
         philos[i].right_fork = &simulation->forks[(i + 1) % simulation->number_of_philosophers];
         philos[i].simulation = simulation;
+        philos[i].last_time_ate = ft_real_time(&philos[i]);
         pthread_mutex_init(&philos[i].last_time_ate_mutex, NULL);
         i++;
     }

@@ -29,11 +29,13 @@ int ft_check_death(t_philo *philo, int *someone_died)
     eaten = philo->last_time_ate;
     time_to_die = philo->simulation->time_to_die;
     time_in_ms = ft_real_time(philo);
-    if (ft_check_meals(philo))
+    if (philo->simulation->someone_died == 1)
         return (1);
-    else if (((int)(time_in_ms - eaten) > time_to_die && someone_died == 0))
+    else if (ft_check_meals(philo))
+        return (1);
+    else if ((int)(time_in_ms - eaten) > time_to_die)
     {
-        ft_print_status(philo, "died");
+        printf("%llu %d died\n", time_in_ms, philo->id);
         *someone_died = 1;
         return (1);
     }
