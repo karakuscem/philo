@@ -23,8 +23,6 @@ int acquire_forks_odd(t_philo *philo)
 		pthread_mutex_unlock(philo->left_fork);
 		return (1);
 	}
-    pthread_mutex_unlock(philo->right_fork);
-	pthread_mutex_unlock(philo->left_fork);
     return (0);
 }
 
@@ -50,7 +48,5 @@ int acquire_forks_even(t_philo *philo)
         pthread_mutex_unlock(philo->right_fork);
         return (1);
     }
-    pthread_mutex_unlock(philo->left_fork);
-    pthread_mutex_unlock(philo->right_fork);
     return (0);
 }

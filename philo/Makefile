@@ -6,7 +6,7 @@
 #    By: ckarakus <ckarakus@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 03:47:05 by ckarakus          #+#    #+#              #
-#    Updated: 2023/06/17 16:05:21 by ckarakus         ###   ########.fr        #
+#    Updated: 2023/07/21 22:48:04 by ckarakus         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,8 @@ SRCS = ./check.c \
 		./start.c \
 		./time.c \
 		./utils.c \
+		./end.c \
+		./simulation.c
 
 NAME = philo
 CC = gcc

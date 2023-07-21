@@ -51,7 +51,11 @@ unsigned long long ft_real_time(t_philo *philo);
 int ft_print_status(t_philo *philo, char *status);
 int acquire_forks_odd(t_philo *philo);
 int acquire_forks_even(t_philo *philo);
-int ft_usleep(unsigned long long time_in_ms);
+void	ft_usleep(int wait_time);
 unsigned long long ft_get_time(void);
+int ft_end_sim(t_philo *philos, int num_of_philos);
+void ft_end_program(t_philo *philos, t_data *simulation);
+int ft_check_args(int argc, char **argv);
+int ft_simulation(t_data *simulation, t_philo *philos, int argc, char **argv);
 
 #endif

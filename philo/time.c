@@ -22,15 +22,11 @@ unsigned long long ft_get_time(void)
     return (time_in_ms);
 }
 
-int ft_usleep(unsigned long long time_in_ms)
+void	ft_usleep(int wait_time)
 {
-    unsigned long long start;
+	unsigned long long	time;
 
-    start = ft_get_time();
-    while (ft_get_time() - start < time_in_ms)
-    {
-        if (usleep(100) == -1)
-            return (1);
-    }
-    return (0);
+	time = ft_get_time();
+	while (ft_get_time() - time < (unsigned long long)wait_time)
+		usleep(100);
 }
