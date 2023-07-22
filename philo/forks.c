@@ -6,7 +6,7 @@
 /*   By: ckarakus <ckarakus@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 22:58:17 by ckarakus          #+#    #+#             */
-/*   Updated: 2023/07/21 22:58:17 by ckarakus         ###   ########.fr       */
+/*   Updated: 2023/07/22 18:13:28 by ckarakus         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ int acquire_forks_odd(t_philo *philo)
     {
         pthread_mutex_unlock(philo->left_fork);
         ft_usleep(philo->simulation->time_to_die);
-        ft_print_status(philo, "died");
-        philo->simulation->someone_died = 1;
+        ft_check_death(philo, &philo->simulation->someone_died);
         return (1);
     }
 	pthread_mutex_lock(philo->right_fork);

@@ -6,7 +6,7 @@
 /*   By: ckarakus <ckarakus@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 22:58:10 by ckarakus          #+#    #+#             */
-/*   Updated: 2023/07/21 22:58:11 by ckarakus         ###   ########.fr       */
+/*   Updated: 2023/07/22 18:14:07 by ckarakus         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,16 @@ int ft_check_death(t_philo *philo, int *someone_died)
     pthread_mutex_unlock(&philo->last_time_ate_mutex);
     time_to_die = philo->simulation->time_to_die;
     time_in_ms = ft_real_time(philo);
-
+    pthread_mutex_lock(&philo->simulation->someone_died_mutex);
     if (ft_check_meals(philo) || ((int)(time_in_ms - eaten) > time_to_die && *someone_died == 0))
     {
-        pthread_mutex_lock(&philo->simulation->someone_died_mutex);
+        
         printf("%llu %d died\n", time_in_ms, philo->id);
         *someone_died = 1;
         pthread_mutex_unlock(&philo->simulation->someone_died_mutex);
         return (1);
     }
+    pthread_mutex_unlock(&philo->simulation->someone_died_mutex);
     return (0);
 }
 
