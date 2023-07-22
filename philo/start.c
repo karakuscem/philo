@@ -6,13 +6,13 @@
 /*   By: ckarakus <ckarakus@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 22:58:33 by ckarakus          #+#    #+#             */
-/*   Updated: 2023/07/21 22:58:33 by ckarakus         ###   ########.fr       */
+/*   Updated: 2023/07/22 22:07:31 by ckarakus         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static int ft_eat(t_philo *philo)
+static int	ft_eat(t_philo *philo)
 {
 	if (philo->id % 2 == 0)
 	{
@@ -33,7 +33,7 @@ static int ft_eat(t_philo *philo)
 	return (0);
 }
 
-static int ft_sleep(t_philo *philo)
+static int	ft_sleep(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->last_time_ate_mutex);
 	pthread_mutex_lock(&philo->simulation->times_ate_mutex);
@@ -54,41 +54,40 @@ static int ft_sleep(t_philo *philo)
 	return (0);
 }
 
-static int ft_think(t_philo *philo)
+static int	ft_think(t_philo *philo)
 {
 	if (ft_print_status(philo, "is thinking"))
 		return (1);
 	return (0);
 }
 
-static void    *routine(void *arg)
+static void	*routine(void *arg)
 {
-	t_philo *philo;
-
+	t_philo	*philo;
 
 	philo = (t_philo *)arg;
 	while (1)
 	{
 		if (ft_eat(philo))
-			break;
+			break ;
 		if (ft_sleep(philo))
-			break;
+			break ;
 		if (ft_think(philo))
-			break;
+			break ;
 	}
 	return (NULL);
-} 
+}
 
-int ft_start_sim(t_philo *philos, int num_of_philos)
+int	ft_start_sim(t_philo *philos, int num_of_philos)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < num_of_philos)
 	{
 		pthread_create(&philos[i].thread, NULL, &routine, &philos[i]);
 		i++;
-		usleep(100);	
+		usleep(100);
 	}
 	while (philos->simulation->someone_died != 1)
 		ft_check_death(philos, &philos->simulation->someone_died);
